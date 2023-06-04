@@ -13,7 +13,10 @@
             <form action="/" method="POST" class="grid grid-cols-12 gap-2">
               <div class="col-span-10">
                 <div class="p-2">
-                  <input type="text" class="relative outline-none rounded py-3 px-3 w-full bg-white shadow text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:shadow-outline" placeholder="placeholder" name="name" />
+                  <input type="text" 
+                    class="relative outline-none rounded py-3 px-3 w-full bg-white shadow text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:shadow-outline" 
+                    placeholder="Enter comma separate domains" 
+                    name="name" />
                 </div>
               </div>
               <div class="col-span-2">
@@ -56,7 +59,47 @@
                   <th
                     class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
                   >
-                    Availability
+                  registryDomainId
+                  </th>
+                  <th
+                    class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                  >
+                  registrarUrl
+                  </th>
+                  <th
+                    class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                  >
+                  registrar
+                  </th>
+                  <th
+                    class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                  >
+                  registrarAbuseContactEmail
+                  </th>
+                  <th
+                    class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                  >
+                  registrarAbuseContactPhone
+                  </th>
+                  <th
+                    class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                  >
+                  registrantOrganization
+                  </th>
+                  <th
+                    class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                  >
+                  registrantStateProvince
+                  </th>
+                  <th
+                    class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                  >
+                  adminOrganization
+                  </th>
+                  <th
+                    class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                  >
+                  adminCountry
                   </th>
                   <th
                     class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100"
@@ -81,11 +124,47 @@
                   </td>
                   <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <p class="text-gray-900 whitespace-no-wrap">
-                      <% if (res.domainName == undefined || res.domainName == null || res.domainName == '') { %>
-                        Available
-                      <% } else { %>
-                        <%= res.registrarWhoisServer %>
-                      <% } %>
+                      <%= res.registryDomainId %>
+                    </p>
+                  </td>
+                  <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p class="text-gray-900 whitespace-no-wrap">
+                      <%= res.registrarUrl %>
+                    </p>
+                  </td>
+                  <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p class="text-gray-900 whitespace-no-wrap">
+                      <%= res.registrar %>
+                    </p>
+                  </td>
+                  <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p class="text-gray-900 whitespace-no-wrap">
+                      <%= res.registrarAbuseContactEmail %>
+                    </p>
+                  </td>
+                  <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p class="text-gray-900 whitespace-no-wrap">
+                      <%= res.registrarAbuseContactPhone %>
+                    </p>
+                  </td>
+                  <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p class="text-gray-900 whitespace-no-wrap">
+                      <%= res.registrantOrganization %>
+                    </p>
+                  </td>
+                  <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p class="text-gray-900 whitespace-no-wrap">
+                      <%= res.registrantStateProvince %>
+                    </p>
+                  </td>
+                  <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p class="text-gray-900 whitespace-no-wrap">
+                      <%= res.adminOrganization %>
+                    </p>
+                  </td>
+                  <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p class="text-gray-900 whitespace-no-wrap">
+                      <%= res.adminCountry %>
                     </p>
                   </td>
                   <td
