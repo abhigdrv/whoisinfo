@@ -3,11 +3,13 @@ const cors = require('cors')
 const app = express()
 const port = process.env.PORT || 3000
 const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: true }));
+const axios = require('axios');
+const xml2js = require('xml2js');
 
 const whois = require('whois-json');
 const domain = 'abhishekvishwakarma.com';
 
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -28,7 +30,6 @@ app.post("/", async (req, res) => {
         let domains = req.body.name.split(',');
         const results = await Promise.all(domains.map(domain => whois(domain)));
         whoInfos = results;
-        console.log(results, 'finalResults');
     }    
     const data = {
         query: req.body?.name || '',
@@ -38,13 +39,47 @@ app.post("/", async (req, res) => {
     res.render('./merged', data);
 });
 
+app.get("/namecheap", (req, res) => {
+    const data = {
+        query: '',
+        result: []
+    };
+    res.render('./namecheap', data);
+});
+
+app.post("/namecheap", async (req, res) => {
+    let whoInfos;
+    let searchTerm;
+    if(req.body.name.includes(",")){
+        searchTerm = req.body.name;
+    }else{
+        searchTerm = req.body.name.split(' ').join(', ');
+    }
+    let url = 'https://api.sandbox.namecheap.com/xml.response?ApiUser=abhigdrv&ApiKey=6c566d57e5ea483091e3618dd3ca4a58&UserName=abhigdrv&Command=namecheap.domains.check&ClientIp=172.19.128.1&DomainList='+searchTerm;
+    await axios.get(url).then(response => {
+        xml2js.parseString(response.data, (error, result) => {
+            if (error) {
+              console.error(error);
+            } else {
+              whoInfos = result.ApiResponse.CommandResponse[0].DomainCheckResult;
+            }
+          });
+    })
+    .catch(error => {
+        console.error(error);
+    });
+    const data = {
+        result:whoInfos
+    }
+    res.render('./namecheap', data);
+});
+
 app.post("/response", async (req, res) => {
     let whoInfos;
     if(req.body && req.body.name){
         let domains = req.body.name.split(',');
         const results = await Promise.all(domains.map(domain => whois(domain)));
         whoInfos = results;
-        console.log(results, 'finalResults');
     }    
     const data = {
         query: req.body?.name || '',

@@ -8,12 +8,9 @@
     <div class="container mx-auto px-4 sm:px-8">
       <div class="py-8">
         <div>
-          <h2 class="text-2xl font-semibold leading-tight">
-            <span>Search Domain Availability</span>
-            <a class="float-right text-blue-500 cursor-pointer" href="/namecheap">Goto Namecheap Search</a>
-          </h2>
+          <h2 class="text-2xl font-semibold leading-tight">Namecheap Domain Availability</h2>
           <div>
-            <form action="/" method="POST" class="grid grid-cols-12 gap-2">
+            <form action="/namecheap" method="POST" class="grid grid-cols-12 gap-2">
               <div class="col-span-10">
                 <div class="p-2">
                   <input type="text" 
@@ -57,52 +54,57 @@
                   <th
                     class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
                   >
-                    Domain Name
+                  Domain
                   </th>
                   <th
                     class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
                   >
-                  registryDomainId
+                  Available
                   </th>
                   <th
                     class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
                   >
-                  registrarUrl
+                  ErrorNo
                   </th>
                   <th
                     class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
                   >
-                  registrar
+                  Description
                   </th>
                   <th
                     class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
                   >
-                  registrarAbuseContactEmail
+                  IsPremiumName
                   </th>
                   <th
                     class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
                   >
-                  registrarAbuseContactPhone
+                  PremiumRegistrationPrice
                   </th>
                   <th
                     class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
                   >
-                  registrantOrganization
+                  PremiumRenewalPrice
                   </th>
                   <th
                     class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
                   >
-                  registrantStateProvince
+                  PremiumRestorePrice
                   </th>
                   <th
                     class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
                   >
-                  adminOrganization
+                  PremiumTransferPrice
                   </th>
                   <th
                     class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
                   >
-                  adminCountry
+                  IcannFee
+                  </th>
+                  <th
+                    class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                  >
+                  EapFee
                   </th>
                   <th
                     class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100"
@@ -115,59 +117,68 @@
                   <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <div class="flex">
                       <div class="ml-3">
-                        <p class="text-gray-900 whitespace-no-wrap">
-                          <% if (res.domainName == undefined || res.domainName == null || res.domainName == '') { %>
-                            <%= domains[index] %>
-                          <% } else { %>
-                            <%= res.domainName %>
-                          <% } %>
+                        <p class="text-gray-900 whitespace-no-wrap font-bold">
+                            <%= res.$.Domain %>
                         </p>
                       </div>
                     </div>
                   </td>
                   <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <p class="text-gray-900 whitespace-no-wrap">
-                      <%= res.registryDomainId %>
+                        <% if (res.$.Available == true || res.$.Available == 'true') { %>
+                            <span class="text-green-500">Available</span>
+                        <% } else { %>
+                            <span class="text-red-500">Not Available</span>
+                        <% } %>
                     </p>
                   </td>
                   <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <p class="text-gray-900 whitespace-no-wrap">
-                      <%= res.registrarUrl %>
+                      <%= res.$.ErrorNo %>
                     </p>
                   </td>
                   <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <p class="text-gray-900 whitespace-no-wrap">
-                      <%= res.registrar %>
+                      <%= res.$.Description %>
                     </p>
                   </td>
                   <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <p class="text-gray-900 whitespace-no-wrap">
-                      <%= res.registrarAbuseContactEmail %>
+                        <% if (res.$.IsPremiumName == true || res.$.Available == 'true') { %>
+                            <span class="text-amber-500">Yes</span>
+                        <% } else { %>
+                            No
+                        <% } %>
                     </p>
                   </td>
                   <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <p class="text-gray-900 whitespace-no-wrap">
-                      <%= res.registrarAbuseContactPhone %>
+                      <%= res.$.PremiumRegistrationPrice %>
                     </p>
                   </td>
                   <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <p class="text-gray-900 whitespace-no-wrap">
-                      <%= res.registrantOrganization %>
+                      <%= res.$.PremiumRenewalPrice %>
                     </p>
                   </td>
                   <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <p class="text-gray-900 whitespace-no-wrap">
-                      <%= res.registrantStateProvince %>
+                      <%= res.$.PremiumRestorePrice %>
                     </p>
                   </td>
                   <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <p class="text-gray-900 whitespace-no-wrap">
-                      <%= res.adminOrganization %>
+                      <%= res.$.PremiumTransferPrice %>
                     </p>
                   </td>
                   <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <p class="text-gray-900 whitespace-no-wrap">
-                      <%= res.adminCountry %>
+                      <%= res.$.IcannFee %>
+                    </p>
+                  </td>
+                  <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p class="text-gray-900 whitespace-no-wrap">
+                      <%= res.$.EapFee %>
                     </p>
                   </td>
                   <td
