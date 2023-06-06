@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors())
 app.set('view engine', 'ejs');
 
-app.get("/", (req, res) => {
+app.get("/merged", (req, res) => {
     const data = {
         query: '',
         result: []
@@ -24,7 +24,7 @@ app.get("/", (req, res) => {
     res.render('./merged', data);
 });
 
-app.post("/", async (req, res) => {
+app.post("/merged", async (req, res) => {
     let whoInfos;
     if(req.body && req.body.name){
         let domains = req.body.name.split(',');
@@ -47,6 +47,69 @@ app.get("/namecheap", (req, res) => {
     res.render('./namecheap', data);
 });
 
+app.get("/", (req, res) => {
+    const data = {
+        query: '',
+        result: []
+    };
+    res.render('./dashboard', data);
+});
+
+app.get("/namecheapDashboard", (req, res) => {
+    const data = {
+        query: '',
+        result: []
+    };
+    res.render('./namecheapDashboard', data);
+});
+
+app.post("/namecheapDashboard", async (req, res) => {
+    let whoInfos;
+    let searchTerm;
+    if(req.body.name.includes(",")){
+        searchTerm = req.body.name;
+    }else{
+        searchTerm = req.body.name.split(' ').join(', ');
+    }
+    let url = 'https://api.sandbox.namecheap.com/xml.response?ApiUser=abhigdrv&ApiKey=6c566d57e5ea483091e3618dd3ca4a58&UserName=abhigdrv&Command=namecheap.domains.check&ClientIp=172.19.128.1&DomainList='+searchTerm;
+    await axios.get(url).then(response => {
+        xml2js.parseString(response.data, (error, result) => {
+            if (error) {
+              console.error(error);
+            } else {
+                if(result && result.ApiResponse && result.ApiResponse.CommandResponse && result.ApiResponse.CommandResponse[0].DomainCheckResult)
+                {
+                    whoInfos = result.ApiResponse.CommandResponse[0].DomainCheckResult
+                }else{
+                    whoInfos = []
+                }
+            }
+          });
+    })
+    .catch(error => {
+        console.error(error);
+    });
+    const data = {
+        result:whoInfos
+    }
+    res.render('./namecheapDashboard', data);
+});
+
+app.post("/", async (req, res) => {
+    let whoInfos;
+    if(req.body && req.body.name){
+        let domains = req.body.name.split(',');
+        const results = await Promise.all(domains.map(domain => whois(domain)));
+        whoInfos = results;
+    }    
+    const data = {
+        query: req.body?.name || '',
+        domains:req.body?.name.split(','),
+        result: whoInfos
+    };
+    res.render('./dashboard', data);
+});
+
 app.post("/namecheap", async (req, res) => {
     let whoInfos;
     let searchTerm;
@@ -61,7 +124,12 @@ app.post("/namecheap", async (req, res) => {
             if (error) {
               console.error(error);
             } else {
-              whoInfos = result.ApiResponse.CommandResponse[0].DomainCheckResult;
+                if(result && result.ApiResponse && result.ApiResponse.CommandResponse && result.ApiResponse.CommandResponse[0].DomainCheckResult)
+                {
+                    whoInfos = result.ApiResponse.CommandResponse[0].DomainCheckResult
+                }else{
+                    whoInfos = []
+                }
             }
           });
     })
