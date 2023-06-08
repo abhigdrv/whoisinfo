@@ -71,7 +71,7 @@ app.post("/namecheapDashboard", async (req, res) => {
     }else{
         searchTerm = req.body.name.split(' ').join(', ');
     }
-    let url = 'https://api.sandbox.namecheap.com/xml.response?ApiUser=abhigdrv&ApiKey=6c566d57e5ea483091e3618dd3ca4a58&UserName=abhigdrv&Command=namecheap.domains.check&ClientIp=172.19.128.1&DomainList='+searchTerm;
+    let url = 'https://api.namecheap.com/xml.response?ApiUser=ramizmedia&ApiKey=381f6fc3d9da4f3a90addb35f95d6e73&UserName=ramizmedia&Command=namecheap.domains.check&ClientIp=172.19.128.1&DomainList='+searchTerm;
     await axios.get(url).then(response => {
         xml2js.parseString(response.data, (error, result) => {
             if (error) {
@@ -118,7 +118,7 @@ app.post("/namecheap", async (req, res) => {
     }else{
         searchTerm = req.body.name.split(' ').join(', ');
     }
-    let url = 'https://api.sandbox.namecheap.com/xml.response?ApiUser=abhigdrv&ApiKey=6c566d57e5ea483091e3618dd3ca4a58&UserName=abhigdrv&Command=namecheap.domains.check&ClientIp=172.19.128.1&DomainList='+searchTerm;
+    let url = 'https://api.namecheap.com/xml.response?ApiUser=ramizmedia&ApiKey=381f6fc3d9da4f3a90addb35f95d6e73&UserName=ramizmedia&Command=namecheap.domains.check&ClientIp=172.19.128.1&DomainList='+searchTerm;
     await axios.get(url).then(response => {
         xml2js.parseString(response.data, (error, result) => {
             if (error) {
