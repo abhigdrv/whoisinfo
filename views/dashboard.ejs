@@ -246,15 +246,17 @@
             </div>
         </div>
     </div>
-    
-    <script>
+      <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+      <script>
         function exportF(elem) {
-          var table = document.getElementById("table");
-          var html = table.outerHTML;
-          var url = 'data:application/vnd.ms-excel,' + escape(html); // Set your html table into url 
-          elem.setAttribute("href", url);
-          elem.setAttribute("download", "export.xls"); // Choose the file name
-          return false;
+          const table = document.getElementById('table');
+          const workbook = XLSX.utils.table_to_book(table);
+          const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });  
+          const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });  
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = 'table_data.xlsx';
+          link.click();
         }
       </script>
 
