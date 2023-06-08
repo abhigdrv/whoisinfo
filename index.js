@@ -5,7 +5,6 @@ const port = process.env.PORT || 3000
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const xml2js = require('xml2js');
-const chunkSize = 20;
 
 const whois = require('whois-json');
 const domain = 'abhishekvishwakarma.com';
@@ -65,47 +64,31 @@ app.get("/namecheapDashboard", (req, res) => {
 });
 
 app.post("/namecheapDashboard", async (req, res) => {
-    let whoInfos = [];
+    let whoInfos;
     let searchTerm;
-    let searchTermLength = 0;
-    let searchTermArray = [];
     if(req.body.name.includes(",")){
         searchTerm = req.body.name;
-        searchTermArray = req.body.name.split(',');
-        searchTermLength = req.body.name.split(',').length;
     }else{
         searchTerm = req.body.name.split(' ').join(', ');
-        searchTermArray = req.body.name.split(' ');
-        searchTermLength = req.body.name.split(' ').length;
     }
-    
-    const chunkResult = chunkArray(searchTermArray, chunkSize);
-    await chunkResult.forEach(async (chunk, index) => {
-
-        let url = 'https://api.namecheap.com/xml.response?ApiUser=ramizmedia&ApiKey=381f6fc3d9da4f3a90addb35f95d6e73&UserName=ramizmedia&Command=namecheap.domains.check&ClientIp=172.19.128.1&DomainList='+chunk.join(', ');
-        await axios.get(url).then(response => {
-            xml2js.parseString(response.data, (error, result) => {
-                if (error) {
-                  console.error(error);
-                } else {
-                    if(result && result.ApiResponse && result.ApiResponse.CommandResponse && result.ApiResponse.CommandResponse[0].DomainCheckResult)
-                    {
-                        whoInfos.push(...result.ApiResponse.CommandResponse[0].DomainCheckResult)
-                    }else{
-                        whoInfos = []
-                    }
+    let url = 'https://api.namecheap.com/xml.response?ApiUser=ramizmedia&ApiKey=381f6fc3d9da4f3a90addb35f95d6e73&UserName=ramizmedia&Command=namecheap.domains.check&ClientIp=172.19.128.1&DomainList='+searchTerm;
+    await axios.get(url).then(response => {
+        xml2js.parseString(response.data, (error, result) => {
+            if (error) {
+              console.error(error);
+            } else {
+                if(result && result.ApiResponse && result.ApiResponse.CommandResponse && result.ApiResponse.CommandResponse[0].DomainCheckResult)
+                {
+                    whoInfos = result.ApiResponse.CommandResponse[0].DomainCheckResult
+                }else{
+                    whoInfos = []
                 }
-              });
-        })
-        .catch(error => {
-            console.error(error);
-        });
-        console.log('Api called ', index)
-        
+            }
+          });
     })
-
-    
-
+    .catch(error => {
+        console.error(error);
+    });
     const data = {
         result:whoInfos
     }
@@ -183,18 +166,6 @@ app.post('/whois', async (req, res) => {
       res.status(500).json({ error: 'An error occurred' });
     }
   });
-
-  function chunkArray(array, chunkSize) {
-    const chunks = [];
-    let index = 0;
-  
-    while (index < array.length) {
-      chunks.push(array.slice(index, index + chunkSize));
-      index += chunkSize;
-    }
-  
-    return chunks;
-  }
 
 
 app.listen(port, function(err){
