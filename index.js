@@ -5,6 +5,7 @@ const port = process.env.PORT || 3000
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const xml2js = require('xml2js');
+const fs = require('fs');
 
 const whois = require('whois-json');
 const domain = 'abhishekvishwakarma.com';
@@ -54,6 +55,40 @@ app.get("/", (req, res) => {
     };
     res.render('./dashboard', data);
 });
+
+app.get("/report", (req, res) => {
+    fs.readFile('finalFourCharDomainList.json', 'utf8', (err, data) => {
+        if (err) {
+          console.error(err);
+          res.status(500).json({ error: 'Internal server error' });
+          return;
+        }    
+        const jsonData = JSON.parse(data);
+        const fData = {
+            query: '',
+            result: jsonData.slice(0, 5000)
+        };
+        res.render('./report', fData);
+    });
+});
+
+app.get('/api/report', (req, res) => {
+    fs.readFile('finalFourCharDomainList.json', 'utf8', (err, data) => {
+        if (err) {
+          console.error(err);
+          res.status(500).json({ error: 'Internal server error' });
+          return;
+        }    
+        let jsonData = JSON.parse(data);
+        if(req.query.available == 1) jsonData = jsonData.filter(val => val.Available == 'available')
+        const page = parseInt(req.query.page) || 1;
+        const perPage = 100;
+        const startIndex = (page - 1) * perPage;
+        const endIndex = startIndex + perPage;
+        const paginatedData = jsonData.slice(startIndex, endIndex);
+        res.json(paginatedData);
+    });
+  });
 
 app.get("/namecheapDashboard", (req, res) => {
     const data = {
